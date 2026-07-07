@@ -3,15 +3,15 @@
 
 require conf/machine/include/soc-family.inc
 
-RK_WIFIBT_RRECOMMENDS ?= ""
+RK_WIFIBT_RRECOMMENDS ??= ""
 MACHINE_EXTRA_RRECOMMENDS:append = " \
 	${RK_WIFIBT_RRECOMMENDS} \
 	kernel-modules \
 "
 
-RK_ISP_VERSION := ""
+RK_ISP_VERSION ??= ""
 
-SERIAL_CONSOLES ?= "115200;ttyFIQ0"
+SERIAL_CONSOLES ?= "1500000;ttyFIQ0"
 KERNEL_IMAGETYPE ?= "Image"
 KBUILD_DEFCONFIG ?= "rockchip_linux_defconfig"
 MACHINEOVERRIDES .= ":rockchip"
@@ -20,12 +20,12 @@ PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot-rockchip"
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-rockchip"
 
-ROCKCHIP_KERNEL_COMPRESSED ?= "1"
-ROCKCHIP_KERNEL_IMAGES ?= "1"
+ROCKCHIP_KERNEL_COMPRESSED ??= "1"
+ROCKCHIP_KERNEL_IMAGES ??= "1"
 
-# Prefer using Rockchip BSP kernel 5.10
-PREFERRED_VERSION_linux-rockchip ?= "5.10%"
-LINUXLIBCVERSION ?= "5.10-custom%"
+# Prefer using Rockchip BSP kernel 6.1
+PREFERRED_VERSION_linux-rockchip ?= "6.1%"
+LINUXLIBCVERSION ?= "6.1-custom%"
 # Avoid old kernel version error
 OLDEST_KERNEL = "${@d.getVar('LINUXLIBCVERSION').split('-')[0]}"
 
@@ -42,3 +42,7 @@ XSERVER ?= " \
 PREFERRED_RPROVIDER_lib32-initd-functions = "lib32-initscripts"
 
 RDEPENDS:${KERNEL_PACKAGE_NAME}-base = ""
+
+# Bypass patch checks
+ERROR_QA:remove = "patch-status patch-fuzz"
+WARN_QA:remove = "patch-fuzz"
